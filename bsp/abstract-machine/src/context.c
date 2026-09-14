@@ -30,6 +30,15 @@ static void package(void *args)
   entry(parameter);
   if (exit) exit();
 }
+/*
+static void package(void *args)
+{
+  void **args_tmp = (void **)args;
+  ((void (*)(void *))args_tmp[0])(args_tmp[1]);
+  ((void (*)(void))args_tmp[2])();
+}*/
+
+
 
 void __am_cte_init() {
   cte_init(ev_handler);
@@ -64,9 +73,9 @@ void rt_hw_context_switch_interrupt(void *context, rt_ubase_t from, rt_ubase_t t
 }
 
 rt_uint8_t *rt_hw_stack_init(void *tentry, void *parameter, rt_uint8_t *stack_addr, void *texit) {
-  Area stack_ = {.end = (rt_uint8_t *)stack_addr};  
+  //Area stack_ = {.end = (rt_uint8_t *)stack_addr};  
   stack_addr = (rt_uint8_t *)((uintptr_t)stack_addr & ~(sizeof(uintptr_t) - 1));
-
+  Area stack_ = {.end = (rt_uint8_t *)stack_addr}; 
   void **args = (void **)((Context *)stack_addr - 4);
   args[0] = (void *)tentry;
   args[1] = (void *)parameter;
